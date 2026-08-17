@@ -1,0 +1,87 @@
+[project]
+name = "cue-runtime"
+dynamic = ["version"]
+description = "Production runtime for CUE: load from Hugging Face, condition on a conversation or sample a user, steer any simulator"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12"
+authors = [{ name = "Handshake" }]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "huggingface_hub>=0.27",
+    "numpy>=2.0",
+    "safetensors>=0.4",
+    "torch>=2.4",
+    "transformers>=4.46",
+]
+
+[project.optional-dependencies]
+# Example-pool retrieval (style samples).
+retrieval = ["datasets>=4.7"]
+# Call OpenAI-compatible chat endpoints (OpenAI, vLLM, OpenRouter, …).
+openai = ["openai>=1.40"]
+
+[project.urls]
+homepage = "https://github.com/Handshake-AI-Research/CUE-user-simulator"
+repository = "https://github.com/Handshake-AI-Research/CUE-user-simulator"
+issues = "https://github.com/Handshake-AI-Research/CUE-user-simulator/issues"
+
+[project.scripts]
+cue = "cue.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/cue/__about__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cue"]
+
+[tool.hatch.envs.default]
+installer = "uv"
+
+[dependency-groups]
+dev = ["pytest>=8.0", "ruff>=0.15.0", "mypy>=1.19.0"]
+
+[[tool.hatch.envs.hatch-test.matrix]]
+python = ["3.12", "3.13", "3.14"]
+
+[tool.hatch.envs.types]
+extra-dependencies = ["mypy>=1.19.0", "pytest>=8.0"]
+
+[tool.hatch.envs.types.scripts]
+check = "mypy {args:src tests}"
+
+[tool.hatch.envs.coverage]
+detached = true
+installer = "uv"
+dependencies = ["coverage[toml]"]
+
+[tool.hatch.envs.coverage.scripts]
+xml = "coverage xml"
+
+[tool.coverage.run]
+omit = ["*/tests/*"]
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["torch", "transformers", "cue_hf", "cue_hf.*", "openai"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["model: end-to-end tests that download CUE weights (require HF_TOKEN)"]
+addopts = "-m 'not model'"

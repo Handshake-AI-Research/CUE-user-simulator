@@ -1,0 +1,21 @@
+# Quick-start CUE config.
+#
+# Run from the repository root:
+#   cue --config examples/quickstart/cue.toml
+#
+# Paths are relative to the invocation's working directory.
+
+mode = "conditioned"
+model = "handshake-ai-research/cue"
+device = "cpu"
+conversation_path = "examples/quickstart/conversation.json"
+session_preprocess = "full"
+output_dir = "examples/quickstart/output"
+
+# Optional simulator execution. Uncomment all three fields and install [openai]
+# (or set simulator_backend = "hf" for Hugging Face Inference Providers).
+#
+# simulator_backend = "openai"
+# simulator_model = "gpt-4o-mini"
+# scenario = "You want help editing a cover letter for a data analyst role."
+# api_key_env = "OPENAI_API_KEY"

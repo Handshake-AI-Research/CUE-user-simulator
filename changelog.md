@@ -1,0 +1,3 @@
+[2026-08-17 11:05] Initial production CUE runtime package
+- Reason: Internship GitHub needs an application-only repo: load from Hugging Face, condition on a conversation or sample a user, steer any base simulator — no training code. Named cue-runtime because macOS case-folds `cue` with the existing `CUE` research tree.
+- Description: Import package is still `cue`. `Cue.from_pretrained` prefers installed `cue-hf`, else Hub `trust_remote_code`; `from_conversation` / `sample` return `PersonaManual`; OpenAI-compatible and Hugging Face Inference simulator backends; `run_user_turn`; CLI (`conditioned` / `sample` / `chat`); examples and unit tests. Default Hub repo `AnjaliRuban/cue`.
