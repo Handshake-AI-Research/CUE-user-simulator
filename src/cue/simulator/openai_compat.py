@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-_OPENAI_REQUIRED = "OpenAICompatSimulator needs the openai package: pip install 'cue-runtime[openai]'"
+_OPENAI_REQUIRED = "OpenAICompatSimulator needs the openai package: pip install 'cue-simulator[openai]'"
 
 
 class OpenAICompatSimulator:

@@ -1,3 +1,7 @@
-[2026-08-17 11:05] Initial production CUE runtime package
-- Reason: Internship GitHub needs an application-only repo: load from Hugging Face, condition on a conversation or sample a user, steer any base simulator — no training code. Named cue-runtime because macOS case-folds `cue` with the existing `CUE` research tree.
-- Description: Import package is still `cue`. `Cue.from_pretrained` prefers installed `cue-hf`, else Hub `trust_remote_code`; `from_conversation` / `sample` return `PersonaManual`; OpenAI-compatible and Hugging Face Inference simulator backends; `run_user_turn`; CLI (`conditioned` / `sample` / `chat`); examples and unit tests. Default Hub repo `AnjaliRuban/cue`.
+[2026-08-17 13:43] Rename installable package to cue-simulator
+- Reason: User asked for the installable package to be just `cue-simulator`.
+- Description: Renamed the distribution from `cue-runtime` to `cue-simulator` in pyproject.toml, README badges/install extras, OpenAI extra hint, and uv.lock. Import package remains `cue`; CLIs remain `cue` and `cue-simulator`.
+
+[2026-08-17 13:41] Expose cue-simulator CLI alias alongside cue
+- Reason: User asked whether the tool could be called `cue` or `cue-simulator` rather than sounding like the package name.
+- Description: Kept `cue` as the primary console script and added `cue-simulator` as the same entry point; README install section now states package name vs CLI names explicitly.
