@@ -1,8 +1,8 @@
-# cue-runtime
+# CUE: Calibrated User Embeddings
 
 [![CI](https://github.com/Handshake-AI-Research/CUE-user-simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/Handshake-AI-Research/CUE-user-simulator/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/cue-runtime)](https://pypi.org/project/cue-runtime/)
-[![Python](https://img.shields.io/pypi/pyversions/cue-runtime)](https://pypi.org/project/cue-runtime/)
+[![PyPI](https://img.shields.io/pypi/v/cue-simulator)](https://pypi.org/project/cue-simulator/)
+[![Python](https://img.shields.io/pypi/pyversions/cue-simulator)](https://pypi.org/project/cue-simulator/)
 
 Production runtime for **CUE** (Conditional User Embeddings). Python import name:
 `cue`. Load a published checkpoint from Hugging Face, build a persona manual from
@@ -13,24 +13,25 @@ This repo is application-only: no training, annotation, or paper evaluation code
 
 | you want | use |
 |----------|-----|
-| weights + remote code | [`handshake-ai-research/cue`](https://huggingface.co/handshake-ai-research/cue) on the Hub |
-| research / training | sibling `CUE-clean` (not this package) |
-| Transformers `AutoModel` plumbing | optional [`cue-hf`](https://github.com/AnjaliRuban/cue-hf) |
+| weights + remote code | [handshake-ai-research/cue](https://huggingface.co/handshake-ai-research/cue) |
+| research / training | [AnjaliRuban/CUE](https://github.com/AnjaliRuban/CUE) |
+| Transformers `AutoModel` plumbing | [AnjaliRuban/cue-hf](https://github.com/AnjaliRuban/cue-hf) |
 
 ## Install
 
-CUE is designed to be published on PyPI, like other Handshake application
-packages:
-
 ```bash
-uv tool install cue-runtime
-# or as a library
-uv add cue-runtime
+uv tool install cue-simulator
+cue --help
+# or
+cue-simulator --help
+
+# or as a library (import name is still `cue`)
+uv add cue-simulator
 ```
 
 Before the first release, install from a clone with `uv sync`. Optional extras
-are `cue-runtime[openai]` for OpenAI-compatible endpoints and
-`cue-runtime[retrieval]` for example-pool retrieval.
+are `cue-simulator[openai]` for OpenAI-compatible endpoints and
+`cue-simulator[retrieval]` for example-pool retrieval.
 
 `Cue.from_pretrained` loads the code bundled in the model repository with
 `AutoModel.from_pretrained(..., trust_remote_code=True)`. If `cue-hf` is already

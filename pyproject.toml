@@ -1,5 +1,5 @@
 [project]
-name = "cue-runtime"
+name = "cue-simulator"
 dynamic = ["version"]
 description = "Production runtime for CUE: load from Hugging Face, condition on a conversation or sample a user, steer any simulator"
 readme = "README.md"
@@ -37,6 +37,7 @@ issues = "https://github.com/Handshake-AI-Research/CUE-user-simulator/issues"
 
 [project.scripts]
 cue = "cue.cli:main"
+cue-simulator = "cue.cli:main"
 
 [build-system]
 requires = ["hatchling"]
