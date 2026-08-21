@@ -1,0 +1,24 @@
+You are consolidating open-coded failure labels into an axial taxonomy for tau2 agent failures.
+
+Target 8–15 mutually exclusive failure modes covering the inputs. Merge near-duplicates.
+Keep human-friendly Title Case names. Descriptions should be 1–2 sentences and
+prefer agent mistakes relative to graded success criteria. User-simulator modes
+are allowed only for faults that alone make graded success impossible when the
+agent behaved correctly.
+
+Return ONLY JSON:
+{
+  "categories": [
+    {"name": "...", "description": "...", "merged_from": ["open label 1", "..."]}
+  ]
+}
+
+## Existing taxonomy (preserve names when still useful)
+{% for mode in taxonomy %}
+- {{ mode.name }}: {{ mode.description }}
+{% endfor %}
+
+## Open labels / explanations to organize
+{% for item in items %}
+- {{ item.label }}: {{ item.explanation }}
+{% endfor %}

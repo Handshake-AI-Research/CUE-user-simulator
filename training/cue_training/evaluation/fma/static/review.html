@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FMA Review</title>
+  <link rel="stylesheet" href="/static/review.css" />
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Failure Mode Review</h1>
+      <p id="meta" class="muted"></p>
+    </div>
+    <div class="top-actions">
+      <span id="progress" class="pill"></span>
+      <button type="button" id="btn-prev">Prev</button>
+      <button type="button" id="btn-next">Next</button>
+      <button type="button" id="btn-finish" class="primary">Finish batch</button>
+    </div>
+  </header>
+
+  <section class="taxonomy-bar">
+    <details id="taxonomy-panel" open>
+      <summary>
+        Taxonomy
+        <span id="taxonomy-count" class="pill"></span>
+        <span class="muted">Add / rename / merge anytime — labels rewrite across this run</span>
+      </summary>
+      <div class="taxonomy-tools">
+        <div class="taxonomy-actions">
+          <button type="button" id="btn-add-mode">+ Add</button>
+          <button type="button" id="btn-merge-modes">Merge into…</button>
+          <button type="button" id="btn-prune-empty">Remove empty</button>
+        </div>
+        <p class="muted">
+          Edit a mode's name or description inline — press Enter to save (Esc cancels a rename).
+          Counts are proposal+decision+tagged samples across the run. “Remove empty” drops modes with 0.
+          Tick checkboxes to pick merge sources.
+        </p>
+        <div id="taxonomy-list" class="taxonomy-list"></div>
+        <p id="taxonomy-status" class="muted"></p>
+      </div>
+    </details>
+  </section>
+
+  <main class="layout">
+    <section class="panel transcript-panel">
+      <h2>Transcript</h2>
+      <div id="episode-header" class="episode-header"></div>
+      <div id="reward-chips" class="chips"></div>
+      <div id="transcript" class="transcript"></div>
+    </section>
+
+    <section class="panel decision-panel">
+      <h2>LLM proposal</h2>
+      <div id="proposal" class="proposal"></div>
+
+      <h2>Your decision</h2>
+      <label for="mode-select">Failure mode</label>
+      <div class="mode-row">
+        <select id="mode-select"></select>
+        <button type="button" id="btn-new-mode">+ New mode</button>
+      </div>
+      <label for="notes">Notes (optional)</label>
+      <textarea id="notes" rows="4" placeholder="Optional auditor notes"></textarea>
+      <button type="button" id="btn-save" class="primary">Save decision</button>
+      <p id="save-status" class="muted"></p>
+    </section>
+  </main>
+
+  <script src="/static/review.js"></script>
+</body>
+</html>

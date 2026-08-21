@@ -38,6 +38,7 @@ issues = "https://github.com/Handshake-AI-Research/CUE-user-simulator/issues"
 [project.scripts]
 cue = "cue.cli:main"
 cue-simulator = "cue.cli:main"
+cue-hf = "cue_hf.cli:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -47,13 +48,32 @@ build-backend = "hatchling.build"
 path = "src/cue/__about__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/cue"]
+# cue_hf lives beside its tests/demo under huggingface/, but ships as a top-level
+# package in this one distribution.
+only-include = ["src/cue", "huggingface/cue_hf"]
+sources = ["src", "huggingface"]
+
+[tool.hatch.build.targets.sdist]
+# training/ is checkout-only; it must not reach PyPI.
+exclude = ["/training", "/examples", "/dist"]
 
 [tool.hatch.envs.default]
 installer = "uv"
 
 [dependency-groups]
 dev = ["pytest>=8.0", "ruff>=0.15.0", "mypy>=1.19.0"]
+research = ["cue-training", "pytest>=8.0"]
+fma = ["cue-training[fma]", "pytest>=8.0"]
+
+[tool.uv]
+default-groups = []
+
+[tool.uv.sources]
+cue-training = { path = "training", editable = true }
+
+[tool.uv.dependency-groups]
+research = { requires-python = ">=3.12,<3.14" }
+fma = { requires-python = ">=3.12,<3.14" }
 
 [[tool.hatch.envs.hatch-test.matrix]]
 python = ["3.12", "3.13", "3.14"]
@@ -81,6 +101,13 @@ strict = true
 [[tool.mypy.overrides]]
 module = ["torch", "transformers", "cue_hf", "cue_hf.*", "openai"]
 ignore_missing_imports = true
+
+[tool.ruff]
+# Match the line length hatch fmt applies by default; declaring [tool.ruff] at all
+# otherwise drops us back to ruff's 88 and reformats the whole repo.
+line-length = 120
+# training/ is a checkout-only research tree carried over as-is.
+extend-exclude = ["training"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

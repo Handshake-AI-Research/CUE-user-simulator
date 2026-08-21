@@ -38,6 +38,11 @@ hatch fmt --check
 uv lock --upgrade
 ```
 
+`uv sync` installs the inference runtime only. Use `uv sync --group dev` for
+pytest/ruff/mypy, and `uv run --group research …` for training/evaluation
+(Python 3.12/3.13). Repeat `--group research` on every `uv run`; a later plain
+`uv run` performs an exact default sync and can remove the research package.
+
 ## Packaging
 
 ```bash
@@ -47,5 +52,7 @@ hatch build
 ## Continuous integration
 
 Testing, type checking, and formatting/linting are checked in
-[CI](.github/workflows/ci.yml) on Python 3.12–3.14. Publishing a GitHub release
+[CI](.github/workflows/ci.yml) on Python 3.12–3.14. Training/evaluation tests
+run in a separate [research workflow](.github/workflows/research.yml) on
+Python 3.12–3.13 when `training/` changes. Publishing a GitHub release
 triggers the trusted PyPI publisher workflow.
