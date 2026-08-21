@@ -17,10 +17,12 @@ if TYPE_CHECKING:
 
 DEFAULT_REPO = "handshake-ai-research/cue"
 _POOL_UNAVAILABLE = (
-    "this model build cannot attach an example pool; install cue-hf or use a Hub repo that bundles the full CueModel"
+    "this model build cannot attach an example pool; install cue-simulator or use a "
+    "Hub repo that bundles the full CueModel"
 )
 _SAMPLER_UNAVAILABLE = (
-    "sampling requires CueModel.sample; install cue-hf or use a Hub repo bundled with the full remote-code package"
+    "sampling requires CueModel.sample; install cue-simulator or use a Hub repo "
+    "bundled with the full remote-code package"
 )
 _Source = Literal["conditioned", "sampled"]
 
@@ -135,7 +137,7 @@ class Cue:
     ) -> Cue:
         """Load weights from a Hub repo (or local export directory).
 
-        Install ``cue-hf`` for the full API, or rely on the model repo's bundled
+        Install ``cue-simulator`` for the full API, or rely on the model repo's bundled
         remote code (``trust_remote_code``) when you only need inference.
         """
 
@@ -275,9 +277,7 @@ class Cue:
                     for m in manuals
                 ]
                 if hasattr(self.model, "_inject_examples"):
-                    merged = self.model._inject_examples(  # noqa: SLF001
-                        merged, bottleneck
-                    )
+                    merged = self.model._inject_examples(merged, bottleneck)
                     for manual, row in zip(manuals, merged, strict=True):
                         manual.examples = _examples(row)
                         manual.steering_prompt = render_steering(

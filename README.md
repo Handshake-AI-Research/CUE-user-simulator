@@ -1,4 +1,4 @@
-# CUE: Calibrated User Embeddings for realistic User Simulation
+# CUE: Calibrated User Embeddings for Multi-Turn User Simulation
 
 [![CI](https://github.com/Handshake-AI-Research/CUE-user-simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/Handshake-AI-Research/CUE-user-simulator/actions/workflows/ci.yml)
 
@@ -15,8 +15,9 @@ user simulator.
 | you want | use |
 |----------|-----|
 | weights + remote code | [handshake-ai-research/cue](https://huggingface.co/handshake-ai-research/cue) |
-| research / training | [AnjaliRuban/CUE](https://github.com/AnjaliRuban/CUE) |
-| Transformers `AutoModel` plumbing | [AnjaliRuban/cue-hf](https://github.com/AnjaliRuban/cue-hf) |
+| example pool | [handshake-ai-research/cue-example-pool](https://huggingface.co/datasets/handshake-ai-research/cue-example-pool) |
+| training annotations | [handshake-ai-research/cue-annotations](https://huggingface.co/datasets/handshake-ai-research/cue-annotations) |
+| research / training (this repo) | `uv run --group research` (see [training/README.md](training/README.md)) |
 
 ## Install
 
@@ -34,9 +35,9 @@ Before the first release, install from a clone with `uv sync`. Optional extras
 are `cue-simulator[openai]` for OpenAI-compatible endpoints and
 `cue-simulator[retrieval]` for example-pool retrieval.
 
-`Cue.from_pretrained` loads the code bundled in the model repository with
-`AutoModel.from_pretrained(..., trust_remote_code=True)`. If `cue-hf` is already
-installed, it uses that package directly.
+`Cue.from_pretrained` prefers the bundled `cue_hf` adapter when this package is
+installed, and otherwise loads Hub remote code with
+`AutoModel.from_pretrained(..., trust_remote_code=True)`.
 
 Private Hub weights need `HF_TOKEN` (or `huggingface-cli login`).
 
@@ -187,6 +188,36 @@ Config-driven runs write:
 Default is **`full`** (keep the whole dialogue). For document-heavy assistants (e.g. long
 drafts), pass `session_preprocess="strip_document"` so the encoder is not dominated by
 the document body. `user_only` keeps user turns only.
+
+## Hugging Face adapter
+
+The `cue_hf` package lives in [`huggingface/`](huggingface/) and ships inside the
+`cue-simulator` wheel (`import cue_hf`, CLI `cue-hf`). Hub checkpoints still
+flatten this package into remote code; after changing adapter sources, regenerate
+that bundle as described in [`huggingface/VENDORED.md`](huggingface/VENDORED.md).
+
+```bash
+uv sync --group dev
+PYTHONPATH=huggingface uv run --group dev pytest huggingface/tests
+```
+
+## Training and evaluation (developers)
+
+Training, annotation, rollouts, and the eight paper metrics are an opt-in checkout
+path, not part of the published wheel:
+
+```bash
+uv sync                              # inference runtime only (Python 3.12–3.14)
+uv sync --group dev                  # plus pytest/ruff/mypy
+uv run --group research cue-train --help
+uv run --group fma cue-fma --help    # Tau2 failure-mode analysis
+```
+
+Always pass `--group research` on later `uv run` commands; a plain `uv run`
+re-syncs the default groups and can remove the research package. On Python 3.14
+use `--python 3.13`. FMA artifacts default to the ignored
+`training/artifacts/fma/` directory and are not stored in this repo. Details:
+[training/README.md](training/README.md).
 
 ## Development
 

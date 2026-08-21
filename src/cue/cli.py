@@ -206,8 +206,8 @@ def main(argv: list[str] | None = None) -> None:
     if args.config:
         if args.cmd:
             parser.error("--config cannot be combined with a subcommand")
-        from cue.config import CueConfig  # noqa: PLC0415
-        from cue.runner import run  # noqa: PLC0415
+        from cue.config import CueConfig
+        from cue.runner import run
 
         result = run(CueConfig.from_toml(args.config), token=os.environ.get("HF_TOKEN"))
         sys.stdout.write(json.dumps(result, indent=2) + "\n")

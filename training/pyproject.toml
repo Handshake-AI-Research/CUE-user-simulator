@@ -1,0 +1,74 @@
+[project]
+name = "cue-training"
+version = "0.1.0"
+description = "Training, annotation, rollouts, and paper metrics for CUE"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12,<3.14"
+authors = [{ name = "Handshake" }]
+dependencies = [
+    "datasets>=4.7",
+    "evaluate>=0.4",
+    "faiss-cpu>=1.8; platform_system == 'Linux'",
+    "huggingface_hub>=0.27",
+    "litellm>=1.89.3",
+    "loguru>=0.7",
+    "numpy>=2.0",
+    "peft>=0.13",
+    "rouge-score>=0.1.2",
+    "scikit-learn>=1.5",
+    "tenacity>=8.0",
+    "torch>=2.4",
+    "tqdm>=4.66",
+    "transformers>=4.46",
+    "trl>=1.7",
+    "wandb>=0.16",
+    "audioop-lts>=0.2.1; python_version >= '3.13'",
+    "einops>=0.8.2",
+]
+
+[project.optional-dependencies]
+llm = ["zstandard>=0.23"]
+fma = [
+    "fastapi>=0.115",
+    "uvicorn>=0.34",
+    "jinja2>=3.1",
+    "matplotlib>=3.8",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cue_training*"]
+
+[tool.setuptools.package-data]
+"cue_training.evaluation.fma" = ["prompts/*.jinja", "static/*"]
+
+[tool.uv]
+package = true
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+vllm = [
+    "vllm>=0.11; python_version < '3.13'",
+    "ray[default]; python_version < '3.13'",
+    "ninja; python_version < '3.13'",
+]
+
+[project.scripts]
+cue-train = "cue_training.cli:main"
+cue-data = "cue_training.data.cli:main"
+cue-baseline = "cue_training.baselines.main:main"
+cue-rollouts = "cue_training.evaluation.rollouts.cli:main"
+cue-tau2-eval = "cue_training.evaluation.tau2_bench.main:main"
+cue-simarena-eval = "cue_training.evaluation.simulatorarena.main:main"
+cue-simarena-score = "cue_training.evaluation.simulatorarena.score_env:main"
+cue-metrics = "cue_training.evaluation.metrics.cli:main"
+cue-fma = "cue_training.evaluation.fma.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

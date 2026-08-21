@@ -1,0 +1,55 @@
+Classify this failed tau2 trajectory into exactly one taxonomy mode.
+
+Primary target: agent errors (the customer-service policy model) relative to the
+graded success criteria — wrong tools/params, missed info, policy mistakes,
+premature/unrequested actions, bad transfers, etc.
+
+When both an agent mistake and a user-simulator fault are present, label the
+agent mistake. Use a user-simulator mode (Premature User Stop, User Identity /
+Task Derailment, Other Simulator Error, or similar) only when the agent behaved
+correctly and the simulator fault alone made graded success impossible.
+
+Ignore transfer_to_human_agents (or similar) calls that do not actually end the
+episode: if the agent "transfers" but then continues the conversation, treat that
+as Environment Error (harness quirk), not Unnecessary Escalation — unless a
+different graded agent or sole-simulator fault better explains the failure.
+
+Likewise, hitting the max conversation / turn cap with no clearer graded fault
+beforehand is Environment Error. Do not invent an agent or user-simulator label
+just because the episode timed out at the cap.
+
+Base the choice on which success-criteria aspect(s) were violated and why.
+
+Return ONLY JSON:
+{"label": "<exact taxonomy name>", "explanation": "2-3 sentences naming the violated criteria and the decisive fault (agent first when both exist)", "turn_indices": [..], "excerpt": "..."}
+
+Use an exact name from the taxonomy. If none fit, use "Uncategorized".
+
+## Taxonomy
+{% for mode in taxonomy %}
+### {{ mode.name }}
+{{ mode.description }}
+{% if mode.examples %}
+Examples:
+{% for ex in mode.examples %}
+- {{ ex.explanation }} (turns {{ ex.turn_indices }})
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+## Episode
+source={{ source_id }} domain={{ domain }} task_id={{ task_id }}
+{{ task_description }}
+
+{% if success_criteria %}
+## Success criteria (primary rubric)
+{{ success_criteria }}
+{% endif %}
+
+{% if reward_report %}
+## reward_report
+{{ reward_report }}
+{% endif %}
+
+## Transcript
+{{ transcript }}

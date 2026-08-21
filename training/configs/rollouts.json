@@ -1,0 +1,163 @@
+{
+  "benchmarks": {
+    "tau2": {
+      "enabled": true,
+      "normalized": "data/evaluation/tau_usi/normalized.jsonl",
+      "tau2_path": "cue_training/evaluation/tau2_bench/external/tau2-bench",
+      "embeddings": "${CUE_STORAGE_ROOT}/embeddings/cue/tau2.json",
+      "cases_dir": null
+    },
+    "simulatorarena": {
+      "writing": {
+        "enabled": true,
+        "annotations": "cue_training/evaluation/simulatorarena/external/SimulatorArena/data/document_creation_annotations.json",
+        "embeddings": "${CUE_STORAGE_ROOT}/embeddings/cue/simarena_writing.json",
+        "background": "cue_training/evaluation/simulatorarena/external/SimulatorArena/data/document_creation_user_simulator_background.json",
+        "profiles_dir": "cue_training/evaluation/simulatorarena/external/SimulatorArena/data/user_simulator_profiles/document_creation"
+      },
+      "math": {
+        "enabled": true,
+        "annotations": "cue_training/evaluation/simulatorarena/external/SimulatorArena/data/math_tutoring_annotations.json",
+        "embeddings": "${CUE_STORAGE_ROOT}/embeddings/cue/simarena_math.json",
+        "background": null,
+        "profiles_dir": "cue_training/evaluation/simulatorarena/external/SimulatorArena/data/user_simulator_profiles/math_tutoring"
+      }
+    },
+    "prism": {
+      "enabled": true,
+      "normalized": "data/evaluation/prism/normalized.jsonl",
+      "embeddings": "${CUE_STORAGE_ROOT}/embeddings/cue/prism.json",
+      "max_user_turns": null
+    }
+  },
+  "simulators": [
+    {
+      "name": "llama",
+      "kind": "api",
+      "model": "hosted_vllm/meta-llama/Llama-3.1-8B-Instruct",
+      "served_name": "meta-llama/Llama-3.1-8B-Instruct",
+      "api_base": "http://127.0.0.1:8000/v1",
+      "api_key_env": "HOSTED_VLLM_API_KEY",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 256
+      }
+    },
+    {
+      "name": "gpt",
+      "kind": "api",
+      "model": "gpt-5.4-mini",
+      "api_key_env": "OPENAI_API_KEY",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 256
+      }
+    },
+    {
+      "name": "gemini",
+      "kind": "api",
+      "model": "gemini/gemini-3.5-flash-lite",
+      "api_key_env": "GOOGLE_API_KEY",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 256
+      }
+    }
+  ],
+  "assistant": {
+    "model": "gpt-5.2",
+    "match_dataset": true,
+    "api_key_env": "OPENAI_API_KEY",
+    "sampling": {
+      "temperature": 0.0,
+      "top_p": 1.0,
+      "max_tokens": 2048
+    }
+  },
+  "resources": {
+    "gpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "sidecar_gpu": 1,
+    "sidecar_port_start": 8713,
+    "sidecar_port_end": 8799,
+    "concurrency": 64,
+    "output_root": "${CUE_STORAGE_ROOT}/outputs/rollouts",
+    "cache_root": null,
+    "storage_root": "${CUE_STORAGE_ROOT}/scratch/rollouts",
+    "vllm_venv": null,
+    "vllm_python": "3.12",
+    "start_vllm_script": "scripts/start_vllm.sh"
+  },
+  "cue": {
+    "data_annotation_config": "configs/data_annotation_validation.json",
+    "proposers": [],
+    "joint_training_checkpoint": "${CUE_STORAGE_ROOT}/models/cue/best",
+    "refinement_checkpoints": {
+      "llama": "${CUE_STORAGE_ROOT}/models/cue/refinement_simulator/hosted-vllm-meta-llama-llama-3-1-8b-instruct",
+      "gpt": "${CUE_STORAGE_ROOT}/models/cue/refinement_simulator/gpt-5-4-mini",
+      "gemini": "${CUE_STORAGE_ROOT}/models/cue/refinement_simulator/gemini-gemini-3-5-flash-lite"
+    },
+    "arms": [
+      "paired",
+      "sampled_uncond"
+    ],
+    "encode_session_preprocess": "auto",
+    "decoder_dir": null,
+    "semantic_model": "nomic-ai/modernbert-embed-base",
+    "decode_temperature": 0.0,
+    "decode_top_p": 0.9,
+    "decode_num_candidates": 1,
+    "decode_mode": "greedy",
+    "decode_slot_dedup_jaccard": 0.8,
+    "decode_noop_retries": 0,
+    "decode_noop_temperature": 0.7,
+    "decode_batch_size": 64,
+    "example_retrieval_enabled": true,
+    "example_retrieval_k_sessions": 8,
+    "example_retrieval_n_general": 2,
+    "example_retrieval_n_specific": 6,
+    "sampler_checkpoint": "${CUE_STORAGE_ROOT}/models/cue/sampler/best",
+    "sampler_seed": 0,
+    "sampler_device": "cuda:2",
+    "sampler_guidance_w": 1.5,
+    "sampler_ddim_steps": 50,
+    "sampler_pop_max_k": 8,
+    "sampler_project_manifold": true
+  },
+  "baselines": {
+    "artifact_root": "${CUE_STORAGE_ROOT}/baselines",
+    "train_data_path": "${CUE_STORAGE_ROOT}/data/train",
+    "train_jsonl_names": [
+      "train.jsonl"
+    ],
+    "ppol_best_program": null,
+    "paper_overrides": {
+      "realusersim": {
+        "profiler_model": "gpt-4o"
+      },
+      "usp": {
+        "pretrained_model": "wangkevin02/USP",
+        "max_model_len": 4096
+      },
+      "ppol": {
+        "iterations": 70,
+        "domain": "retail_airline",
+        "n_personas": 10,
+        "gen_model": "openrouter/google/gemini-3-flash-preview",
+        "mutation_model": "openrouter/google/gemini-3-flash-preview"
+      }
+    }
+  },
+  "metrics": {
+    "enabled": [],
+    "oss_embed_url": null,
+    "oss_gen_url": null
+  }
+}

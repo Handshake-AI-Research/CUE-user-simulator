@@ -1,0 +1,26 @@
+{
+  "data_root": "${CUE_STORAGE_ROOT}/data/validation",
+  "output_root": "${CUE_STORAGE_ROOT}/annotations/profiles",
+  "split": "validation",
+  "per_dataset_cap": 10000,
+  "seed": 0,
+  "num_human_negatives": 5,
+  "max_user_turns": 15,
+  "style_commands": 4,
+  "max_sessions": 0,
+  "skip_existing": true,
+  "session_workers": 64,
+  "sim_workers": 8,
+  "proposer_model": "gpt-5.4-mini",
+  "proposer_api_base": null,
+  "sim_models": [
+    "hosted_vllm/meta-llama/Llama-3.1-8B-Instruct",
+    "hosted_vllm/Qwen/Qwen3-8B",
+    "gpt-5.4-mini",
+    "claude-haiku-4-5-20251001"
+  ],
+  "sim_api_bases": {
+    "hosted_vllm/meta-llama/Llama-3.1-8B-Instruct": "http://127.0.0.1:8000/v1",
+    "hosted_vllm/Qwen/Qwen3-8B": "http://127.0.0.1:8001/v1"
+  }
+}

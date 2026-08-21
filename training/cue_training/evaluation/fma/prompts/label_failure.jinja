@@ -1,0 +1,70 @@
+You are coding agent failures on tau2 customer-service trajectories for a failure-mode taxonomy.
+
+Primary target: agent errors (the customer-service policy model) relative to the
+graded success criteria. User-simulator quirks (odd persona wording, unrealistic
+requests, off-policy behavior, early ###STOP###, wrong identity, missing context)
+are not the label when the agent also made a graded mistake.
+
+When both an agent mistake and a user-simulator fault are present, label the
+agent mistake. Use a user-simulator mode only when the agent behaved correctly
+and the simulator fault alone made graded success impossible.
+
+Ground the label in the success criteria (and any slim reward_report of failed
+programmatic checks): which required outcome(s) were violated, and why.
+Prefer thematic agent failure modes over generic "db_check failed".
+
+The agent had live access to domain tools. When tool calls/results appear in the
+transcript, treat them as authoritative.
+
+Return ONLY a JSON object with this schema:
+{
+  "label": "short failure-mode name (Title Case)",
+  "explanation": "2-3 sentences: which success-criteria aspect(s) failed, the decisive fault (agent first when both exist), and how you know",
+  "turn_indices": [0, 1],
+  "excerpt": "short verbatim span that justifies the label"
+}
+
+Rules:
+- Cite the earliest agent/tool turn indices that justify the failure.
+- Prefer an existing taxonomy label when it fits; invent a new concise label only when needed.
+- Do not invent tool failures that contradict the transcript or reward_report.
+- Prefer an agent-mode label whenever any agent mistake contributed to the failure.
+- If — and only if — the agent acted correctly and the failure is solely simulator-caused, use the matching user-simulator taxonomy mode (or "Uncategorized" if none fit).
+- Do not label Unnecessary Escalation / bad transfer when the agent calls transfer_to_human_agents (or similar) but the conversation continues afterward — that is Environment Error (harness quirk). Prefer a real graded fault when one is evident; otherwise use Environment Error.
+- Hitting the max conversation / turn cap with no clearer graded fault beforehand is Environment Error. Do not blame the agent or user simulator for the cap alone.
+
+{% if examples %}
+## Few-shot examples from prior human audits
+{% for ex in examples %}
+### Example: {{ ex.label }}
+Explanation: {{ ex.explanation }}
+Turns: {{ ex.turn_indices }}
+Snippet: {{ ex.snippet }}
+{% endfor %}
+{% endif %}
+
+{% if taxonomy %}
+## Current taxonomy (prefer these names when applicable)
+{% for mode in taxonomy %}
+- {{ mode.name }}: {{ mode.description }}
+{% endfor %}
+{% endif %}
+
+## Episode metadata
+- source: {{ source_id }}
+- domain: {{ domain }}
+- task_id: {{ task_id }}
+- task_description: {{ task_description }}
+
+{% if success_criteria %}
+## Graded success criteria (primary rubric — which parts were violated?)
+{{ success_criteria }}
+{% endif %}
+
+{% if reward_report %}
+## Programmatic failure report (failed checks only)
+{{ reward_report }}
+{% endif %}
+
+## Transcript (numbered turns)
+{{ transcript }}
