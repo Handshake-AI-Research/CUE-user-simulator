@@ -1,15 +1,16 @@
-# CUE: Calibrated User Embeddings
+# CUE: Calibrated User Embeddings for realistic User Simulation
 
 [![CI](https://github.com/Handshake-AI-Research/CUE-user-simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/Handshake-AI-Research/CUE-user-simulator/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/cue-simulator)](https://pypi.org/project/cue-simulator/)
-[![Python](https://img.shields.io/pypi/pyversions/cue-simulator)](https://pypi.org/project/cue-simulator/)
 
-Production runtime for **CUE** (Conditional User Embeddings). Python import name:
-`cue`. Load a published checkpoint from Hugging Face, build a persona manual from
+**CUE** is a user-simulator framework that can utilize any LLM to generate messages as realistic users. Based on a user's dialogue history, CUE produces a **persona manual**: a short list of behavioral commands ("keep requests terse", "ask about price before committing") that can be added to the system prompt of any LLM so it role-plays that user. Underneath the hood, a chat session from user is encoded into a single 1024-d CUE embedding, and a decoder turns that embedding back into text commands. We call this *user-conditioned CUE*.
+
+You can alternatively use CUE to sample a persona manual representing a *novel* user without any existing user dialogue.
+
+This repo contains a production-ready inference runtime to produce text persona manuals using an already-trained CUE model. 
+Python import name: `cue`. 
+Load a published checkpoint from Hugging Face, build a persona manual from
 a dialogue **or** sample one from the prior, and steer **any** chat model as a
 user simulator.
-
-This repo is application-only: no training, annotation, or paper evaluation code.
 
 | you want | use |
 |----------|-----|
@@ -101,7 +102,7 @@ manual = cue.from_conversation([
     {"role": "user", "content": "still too long, cut it in half"},
 ])
 
-print(manual.steering_prompt)   # paste into a user-sim system prompt
+print(manual.steering_prompt)   # paste this text snippet into a user-simulator system prompt used with any LLM
 print(manual.commands)          # flat command list
 ```
 
