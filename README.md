@@ -231,12 +231,14 @@ checking, formatting, packaging, and CI. Model-download tests are marked
 
 ## Citation
 
+```bibtex
 @article{kantharuban2026cue,
   title={CUEing User Simulators: Calibrated User Embeddings for Multi-Turn Benchmarking},
   author={Kantharuban, Anjali and Mueller, Jonas},
   journal={arXiv preprint arXiv:2610.02460},
   year={2026}
 }
+```
 
 ## License
 
