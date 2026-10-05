@@ -242,4 +242,6 @@ checking, formatting, packaging, and CI. Model-download tests are marked
 
 ## License
 
-Apache-2.0. Model weights on the Hugging Face Hub carry their own card/license.
+This software is licensed under [Apache-2.0](LICENSE.txt).
+
+[Model weights on Hugging Face](https://huggingface.co/handshake-ai-research/cue) carry their own card/license.
