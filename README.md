@@ -2,9 +2,13 @@
 
 [![CI](https://github.com/Handshake-AI-Research/CUE-user-simulator/actions/workflows/ci.yml/badge.svg)](https://github.com/Handshake-AI-Research/CUE-user-simulator/actions/workflows/ci.yml)
 
-**CUE** is a user-simulator framework that can utilize any LLM to generate messages as realistic users. Based on a user's dialogue history, CUE produces a **persona manual**: a short list of behavioral commands ("keep requests terse", "ask about price before committing") that can be added to the system prompt of any LLM so it role-plays that user. Underneath the hood, a chat session from user is encoded into a single 1024-d CUE embedding, and a decoder turns that embedding back into text commands. We call this *user-conditioned CUE*.
+**CUE** is a user-simulator framework that can utilize any LLM to generate messages as realistic users.  Based on a user's dialogue history, CUE produces a **persona manual**: a short list of behavioral commands ("keep requests terse", "ask about price before committing") that can be added to the system prompt of any LLM so it role-plays that user. Underneath the hood, a chat session from user is encoded into a single 1024-d CUE embedding, and a decoder turns that embedding back into text commands. We call this *user-conditioned CUE*.
 
-You can alternatively use CUE to sample a persona manual representing a *novel* user without any existing user dialogue.
+You can alternatively use CUE to sample a persona manual representing a *novel* user for which there is no existing dialogue data available.
+Learn more in our paper:
+
+[**CUEing User Simulators: Calibrated User Embeddings for Multi-Turn Benchmarking**](https://arxiv.org/abs/2610.02460)
+
 
 This repo contains a production-ready inference runtime to produce text persona manuals using an already-trained CUE model. 
 Python import name: `cue`. 
@@ -225,6 +229,15 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for Hatch commands, testing, type
 checking, formatting, packaging, and CI. Model-download tests are marked
 `model` and excluded from the default unit test run.
 
+## Citation
+
+@article{kantharuban2026cue,
+  title={CUEing User Simulators: Calibrated User Embeddings for Multi-Turn Benchmarking},
+  author={Kantharuban, Anjali and Mueller, Jonas},
+  journal={arXiv preprint arXiv:2610.02460},
+  year={2026}
+}
+
 ## License
 
-Apache-2.0. Model weights on the Hub carry their own card/license.
+Apache-2.0. Model weights on the Hugging Face Hub carry their own card/license.
