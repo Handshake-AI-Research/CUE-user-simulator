@@ -53,13 +53,10 @@ The repository ships a runnable config under `examples/quickstart/`:
 # 1. Install
 uv sync
 
-# 2. Provide access to the private model (not needed once it is public)
-export HF_TOKEN=hf_...
-
-# 3. Run from the repository root
+# 2. Run from the repository root
 uv run cue --config examples/quickstart/cue.toml
 
-# 4. Inspect the stable application outputs
+# 3. Inspect the stable application outputs
 cat examples/quickstart/output/steering_prompts.txt
 cat examples/quickstart/output/manuals.json
 ```
